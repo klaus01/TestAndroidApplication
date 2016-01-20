@@ -1,22 +1,28 @@
 package model;
 
 import com.google.gson.*;
+import com.activeandroid.Model;
+import com.activeandroid.annotation.*;
 
 /**
  * 推荐广告模型
  */
-public class RecommendModel {
+@Table(name = "Recommend")
+public class RecommendModel extends Model {
     /**
      * 推荐ID
      */
+    @Column(name = "RecommendId", unique = true, onUniqueConflict = Column.ConflictAction.REPLACE)
     public int RecommendId;
     /**
      * 类型
      */
+    @Column(name = "Type")
     public RecommendType Type;
     /**
      * 图片链接地址
      */
+    @Column(name = "Img")
     public String Img;
 
 

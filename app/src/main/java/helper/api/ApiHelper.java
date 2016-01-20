@@ -7,8 +7,14 @@ import cz.msebera.android.httpclient.Header;
 import com.google.gson.GsonBuilder;
 import com.loopj.android.http.*;
 import com.google.gson.Gson;
+
+import org.json.JSONObject;
+
+import cz.msebera.android.httpclient.entity.ByteArrayEntity;
+import main.MyApplication;
 import model.*;
 
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Type;
 
 /**
@@ -52,22 +58,33 @@ public class ApiHelper<T> {
         });
     }
 
-//    public void post(String url, RequestParams params, final Type apiObjectType, final ApiComplete<T> completeHandler) {
-//        client.post(getAbsoluteUrl(url), params, new TextHttpResponseHandler() {
-//            @Override
-//            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-//                Log.i("POST请求失败", statusCode + "");
-//                completeHandler.onComplete(statusCode, null);
-//            }
-//
-//            @Override
-//            public void onSuccess(int statusCode, Header[] headers, String responseString) {
-//                ApiInfoModel<T> apiInfo = gson.fromJson(responseString, apiObjectType);
-//                Log.i("POST请求成功", apiInfo.toString());
-//                completeHandler.onComplete(statusCode, apiInfo);
-//            }
-//        });
-//    }
+    public void post(String url, JSONObject params, final Type apiObjectType, final ApiComplete<T> completeHandler) {
+        String jsonString = params == null ? null : params.toString();
+        Log.i("POST PARAMS", jsonString);
+        ByteArrayEntity entity = null;
+        if (jsonString != null) {
+            try {
+                entity = new ByteArrayEntity(jsonString.getBytes("UTF-8"));
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+        }
+
+        client.post(MyApplication.getInstance(), getAbsoluteUrl(url), entity, "application/json", new TextHttpResponseHandler() {
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                Log.i("POST请求失败", statusCode + "");
+                completeHandler.onComplete(statusCode, null);
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, String responseString) {
+                ApiInfoModel<T> apiInfo = gson.fromJson(responseString, apiObjectType);
+                Log.i("POST请求成功", apiInfo.toString());
+                completeHandler.onComplete(statusCode, apiInfo);
+            }
+        });
+    }
 
     private static String getAbsoluteUrl(String relativeUrl) {
         return BASE_URL + relativeUrl;

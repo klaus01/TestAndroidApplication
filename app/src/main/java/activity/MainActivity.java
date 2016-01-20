@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.activeandroid.query.Select;
 import com.example.kelei.testandroidapplication.R;
 
 import helper.api.*;
@@ -30,16 +31,41 @@ public class MainActivity extends AppCompatActivity {
                 ApiRecommend.getList(1, 1, new ApiHelper.ApiComplete<ApiPagingModel<RecommendModel>>() {
                     @Override
                     public void onComplete(int statusCode, ApiInfoModel<ApiPagingModel<RecommendModel>> apiInfo) {
-                        if (apiInfo == null) {
-                            return;
-                        }
-
-                        if (apiInfo.result != null && apiInfo.result.Items.length > 0) {
-
+                        if (apiInfo != null && apiInfo.isSuc && apiInfo.result != null && apiInfo.result.Items.length > 0) {
+                            for (RecommendModel item : apiInfo.result.Items) {
+                                item.save();
+                            }
                         }
                     }
                 });
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+
+                ApiClub.getList("0", 0, 0, 1, 2, new ApiHelper.ApiComplete<ApiPagingModel<ClubModel>>() {
+                    @Override
+                    public void onComplete(int statusCode, ApiInfoModel<ApiPagingModel<ClubModel>> apiInfo) {
+                        if (apiInfo != null && apiInfo.isSuc && apiInfo.result != null && apiInfo.result.Items.length > 0) {
+                            for (ClubModel item : apiInfo.result.Items) {
+                                item.save();
+                            }
+                        }
+                    }
+                });
+
+                ApiClub.getInfo(7, new ApiHelper.ApiComplete<ClubModel>() {
+                    @Override
+                    public void onComplete(int statusCode, ApiInfoModel<ClubModel> apiInfo) {
+                        if (apiInfo != null && apiInfo.isSuc && apiInfo.result != null) {
+                            apiInfo.result.save();
+                        }
+                    }
+                });
+
+                RecommendModel item = new Select().from(RecommendModel.class).executeSingle();
+                String str = "item is null";
+                if (item != null) {
+                    str = item.Img;
+                    item.delete();
+                }
+                Snackbar.make(view, str, Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
         });

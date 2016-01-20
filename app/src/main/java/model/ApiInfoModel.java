@@ -1,7 +1,8 @@
 package model;
 
 /**
- * Created by kelei on 15/12/31.
+ * API返回的根对象
+ * @param <T> result对象类型
  */
 public class ApiInfoModel<T> {
     public boolean isSuc;
@@ -10,7 +11,6 @@ public class ApiInfoModel<T> {
 
     @Override
     public String toString() {
-        super.toString();
         return "ApiInfoModel{" +
                 "isSuc=" + isSuc +
                 ", message='" + message + '\'' +

@@ -3,7 +3,8 @@ package model;
 import java.util.Arrays;
 
 /**
- * Created by kelei on 15/12/31.
+ * API返回的分页对象
+ * @param <T>
  */
 public class ApiPagingModel<T> {
     public long CurrentPage;

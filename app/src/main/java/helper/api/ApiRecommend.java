@@ -1,9 +1,11 @@
 package helper.api;
 
+import com.google.gson.reflect.TypeToken;
+
 import model.*;
 
 /**
- * Created by kelei on 16/1/7.
+ * 推荐相关接口
  */
 public class ApiRecommend {
 
@@ -14,7 +16,10 @@ public class ApiRecommend {
      * @param completeHandler 回调
      */
     public static void getList(int pageIndex, int pageSize, final ApiHelper.ApiComplete<ApiPagingModel<RecommendModel>> completeHandler) {
-        ApiHelper api = new ApiHelper<ApiPagingModel<RecommendModel>>();
-        api.get("recommend/list/" + pageIndex + "/" + pageSize, null, completeHandler);
+        new ApiHelper<ApiPagingModel<RecommendModel>>().get(
+                "recommend/list/" + pageIndex + "/" + pageSize,
+                null,
+                new TypeToken<ApiInfoModel<ApiPagingModel<RecommendModel>>>(){}.getType(),
+                completeHandler);
     }
 }

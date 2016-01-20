@@ -33,6 +33,10 @@ public class MainActivity extends AppCompatActivity {
                         if (apiInfo == null) {
                             return;
                         }
+
+                        if (apiInfo.result != null && apiInfo.result.Items.length > 0) {
+
+                        }
                     }
                 });
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
